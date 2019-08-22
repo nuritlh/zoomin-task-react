@@ -1,0 +1,13 @@
+.footer {
+    /* position: fixed; */
+    height: 50px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    margin-bottom: 0px;
+    display: flex;
+    background-color: #22298ead;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(rgba(141, 160, 206, 0.9), rgb(106, 134, 199), #22298e29);
+}
