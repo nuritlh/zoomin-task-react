@@ -1,9 +1,19 @@
 import React from 'react';
-import './movie.css';
-import Movie from './movie'
-import Services from '../../services/main'
+import { connect } from "react-redux";
 
-class Movies extends React.Component {
+import './movie.css';
+import Movie from './movie';
+import Services from '../../services/main';
+import {addMovies} from '../../js/actions/index';
+import Spinner from '../Spinner';
+
+
+function mapDispatchToProps(dispatch) {
+  return {
+    addMovies: movies => dispatch(addMovies(movies))
+  };
+}
+class MoviesConnect extends React.Component {
     constructor(props) {
       super(props);
       this.state = { 
@@ -17,7 +27,9 @@ class Movies extends React.Component {
 
     initMovies = () => {
       Services.getMovies().then(res => {
-       this.setState({movies: res})
+       this.setState({movies: res});
+       console.log('movies',this.state.movies);
+       this.props.addMovies({ movies: this.state.movies });
       });
     }
     
@@ -40,16 +52,18 @@ class Movies extends React.Component {
     }
 
     render() {
+      if (this.state.movies.length === 0) return  <Spinner />
       if (this.state.movies) {
         return (
           <div className="movies-container">
           { this.state.movies.map((movie, idx) => {
             return <Movie key={idx} movie={movie} toggleFavMovieslist={this.toggleFavMovieslist}/>
           })}
+          
           </div> 
         );
       }
     }
   }
-
+const Movies = connect(null, mapDispatchToProps)(MoviesConnect);
 export default Movies;

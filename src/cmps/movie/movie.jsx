@@ -1,13 +1,30 @@
 import React from 'react';
+import { connect } from "react-redux";
+import moment from 'moment';
+
+
+import Services from '../../services/main';
+import {selecteMovie} from '../../js/actions/index';
+import Modal from '../modal/modal';
+
 import './movie.css';
+import '../modal/modal.css';
 
-import Services from '../../services/main'
 
-class Movie extends React.Component {
+function mapDispatchToProps(dispatch) {
+  return {
+    selecteMovie: currentMovie => dispatch(selecteMovie(currentMovie))
+  };
+}
+
+class MovieConnecmt extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        isFavfoite: this.initFlag()
+        isFavfoite: this.initFlag(),
+        currentMovie: {},
+        isShowing: false,
+        imgPoster : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLjKQTZbtyzXulIDXR-Gg9y4jzrGdvw6voJWgf2rZ0dwkJ_rbV'
       };
     }
 
@@ -26,13 +43,13 @@ class Movie extends React.Component {
       this.setState({
         isFavfoite: !this.state.isFavfoite
       })
-      this.props.toggleFavMovieslist(movieTitle)
+      this.props.selectMovie(movieTitle)
     }
-    
     componentDidUpdate(prevProps, prevState) {
-      if (prevProps.movie.posterUrl !== this.props.movie.posterUrl) {
         this.renderMoviePster();
-      }
+        // if(!this.props.movie.posterUrl === 'N/A') {
+        //   this.setState({imgPoster: this.props.movie.posterUrl});
+        // }
     }
 
     renderMoviePster = () => {
@@ -41,21 +58,53 @@ class Movie extends React.Component {
         imgPoster = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLjKQTZbtyzXulIDXR-Gg9y4jzrGdvw6voJWgf2rZ0dwkJ_rbV';
       } else {
         imgPoster = this.props.movie.posterUrl;
+        // this.setState({imgPoster});
       }
+      
       return (
         <img className="poster" src={imgPoster} alt="poster"/> 
       )
     }
 
+    selectMovie = (event) => {
+      event.preventDefault();
+      this.setState({
+        currentMovie: this.props.movie,
+        isShowing: true,
+      },
+      () => {
+        this.props.selecteMovie({ currentMovie: this.state.currentMovie });
+      });
+    }
+
+    renderModal = () => {
+      if(this.state.isShowing) {
+        return (
+          <Modal
+            className="modal"
+            show={this.state.isShowing}
+            close={this.closeModalHandler}
+            movie={this.props.movie}
+            imgPoster={this.state.imgPoster}>
+          </Modal>
+        )
+      }
+    }
+    closeModalHandler = () => {
+      this.setState({
+          isShowing: false
+      });
+    }
+
     render() {
       return (
         <>
-        <div className="movie-container">
+        <div className="movie-container" onClick={this.selectMovie}>
             <div >
               {this.props.movie.title}
             </div>
             <div>
-              Year : {this.props.movie.release_date}
+              Year : {moment(this.props.movie.release_date).format("MMM Do YY")}
             </div>
             <div>
               Director : {this.props.movie.director}
@@ -68,9 +117,11 @@ class Movie extends React.Component {
               <label  className="custom-control-label pointer" htmlFor={this.props.movie.title}>Favfoite!</label>
             </div>
           </div>
+          {this.renderModal()}
         </>
       );
     }
   }
 
+const Movie = connect(null, mapDispatchToProps)(MovieConnecmt);
 export default Movie;

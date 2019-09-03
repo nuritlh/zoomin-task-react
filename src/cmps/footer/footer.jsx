@@ -13,6 +13,7 @@ class Footer extends React.Component {
         <div className="footer">
           Created By Nurit Levi
         </div>
+        
       );
     }
   }

@@ -1,17 +1,17 @@
 import {
-    ADD_ARTICLE, FOUND_BAD_WORD
+    ADD_MOVIES, SELECTED_MOVIE
 } from "../constants/action-types";
 
-export function addArticle(payload) {
+export function addMovies(payload) {
     return {
-        type: ADD_ARTICLE,
+        type: ADD_MOVIES,
         payload
     };
 }
 
-export function showErrorMssage(payload) {
+export function selecteMovie(payload) {
     return {
-        type: FOUND_BAD_WORD,
+        type: SELECTED_MOVIE,
         payload
     };
 }

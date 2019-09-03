@@ -1,18 +1,23 @@
 import {
-    ADD_ARTICLE, FOUND_BAD_WORD
+    ADD_MOVIES, SELECTED_MOVIE
 } from "../constants/action-types";
 const initialState = {
-    articles: []
+    movies: [],
+    currentMovie: {}
 };
 
 function rootReducer(state = initialState, action) {
-    if (action.type === ADD_ARTICLE) {
+    if (action.type === ADD_MOVIES) {
         return Object.assign({}, state, {
-            articles: state.articles.concat(action.payload)
-        });
+            movies: action.payload
+          })
     }
-    if (action.type === FOUND_BAD_WORD) {
-        console.log('FOUND_BAD_WORD');
+
+    if (action.type === SELECTED_MOVIE) {
+        //set state
+        return Object.assign({}, state, {
+            currentMovie: action.payload
+          })
     }
     return state;
 }
